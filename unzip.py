@@ -7,7 +7,8 @@ dir_path = './'
 # 遍历目录下的所有文件
 for file_name in os.listdir(dir_path):
     # 如果是zip文件，则解压
-    if file_name.endswith('.zip'):
+    #if file_name.endswith('.zip'):
+    if file_name == 'makeup_data.zip':
         file_path = os.path.join(dir_path, file_name)
         # 创建解压目录
         extract_path = os.path.join(dir_path, file_name[:-4])
