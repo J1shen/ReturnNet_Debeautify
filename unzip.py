@@ -2,7 +2,7 @@ import os
 import zipfile
 
 # 压缩包所在目录
-dir_path = './'
+dir_path = './datasets'
 
 # 遍历目录下的所有文件
 for file_name in os.listdir(dir_path):
