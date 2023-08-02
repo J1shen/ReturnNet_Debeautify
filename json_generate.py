@@ -19,10 +19,10 @@ PROMPT = "Question: Describe the picture with as much as possible detailed infor
 # 自定义函数，用于生成prompt
 def generate_prompt(img_pth):
     image = Image.open(img_pth)
-    inputs = processor(images=image, text=PROMPT , return_tensors="pt").to(device, torch.float16)
+    inputs = processor(images=image, text=None , return_tensors="pt").to(device, torch.float16)
     generated_ids = model.generate(**inputs)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
-    text = generated_text+".Ensure that the figure is as real as a true person."
+    text = generated_text+"And ensure the person with real skin and figure."
     return text
 
 # 指定文件夹路径

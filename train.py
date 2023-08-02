@@ -1,5 +1,5 @@
 from share import *
-
+import torch
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from load_dataset import MyDataset
@@ -7,10 +7,12 @@ from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
 from pytorch_lightning.callbacks import ModelCheckpoint
 
+torch.set_float32_matmul_precision('medium')
+
 
 # Configs
-#resume_path = './checkpoints/control_sd21_ini.ckpt'
-resume_path = './checkpoints/control_sd15_ini.ckpt'
+resume_path = './checkpoints/control_sd21_ini.ckpt'
+#resume_path = './checkpoints/control_sd15_ini.ckpt'
 batch_size = 4
 logger_freq = 300
 learning_rate = 1e-5
@@ -19,8 +21,8 @@ only_mid_control = False
 
 
 # First use cpu to load models. Pytorch Lightning will automatically move it to GPUs.
-model = create_model('./cldm_v15.yaml').cpu()
-#model = create_model('./cldm_v21.yaml').cpu()
+#model = create_model('./cldm_v15.yaml').cpu()
+model = create_model('./cldm_v21.yaml').cpu()
 model.load_state_dict(load_state_dict(resume_path, location='cpu'))
 model.learning_rate = learning_rate
 model.sd_locked = sd_locked
@@ -30,10 +32,10 @@ model.find_unused_parameters=True
 
 # Misc
 dataset = MyDataset()
-dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
+dataloader = DataLoader(dataset, num_workers= 4, batch_size=batch_size, shuffle=True)
 logger = ImageLogger(batch_frequency=logger_freq)
 checkpoint_callback = ModelCheckpoint(
-    monitor='train_loss',
+    monitor='epoch',
     filename='./output/sample-{epoch:02d}-{val_loss:.2f}',
     save_top_k=3,
     mode='min',
@@ -41,13 +43,14 @@ checkpoint_callback = ModelCheckpoint(
 )
 trainer = pl.Trainer(num_nodes=1,
                      precision=32, 
-                     max_epochs=10000,
-                     callbacks=[logger,checkpoint_callback])
+                     max_epochs=1000,
+                     callbacks=[logger])
 
 
 # Train!
 trainer.fit(model=model, 
-            train_dataloaders=dataloader
+            train_dataloaders=dataloader,
+            ckpt_path='./checkpoints/final.ckpt'
             )
 
 trainer.save_checkpoint("./output/final.ckpt")
