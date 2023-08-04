@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from load_dataset import MyDataset
 from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
-from pytorch_lightning.callbacks import ModelCheckpoint
+
 
 torch.set_float32_matmul_precision('medium')
 
@@ -34,23 +34,19 @@ model.find_unused_parameters=True
 dataset = MyDataset()
 dataloader = DataLoader(dataset, num_workers= 4, batch_size=batch_size, shuffle=True)
 logger = ImageLogger(batch_frequency=logger_freq)
-checkpoint_callback = ModelCheckpoint(
-    monitor='epoch',
-    filename='./output/sample-{epoch:02d}-{val_loss:.2f}',
-    save_top_k=3,
-    mode='min',
-    save_last=True
-)
+
 trainer = pl.Trainer(num_nodes=1,
+                     #strategy='ddp_find_unused_parameters_true',
                      precision=32, 
                      max_epochs=1000,
+                     inference_mode= False,
                      callbacks=[logger])
 
 
 # Train!
 trainer.fit(model=model, 
             train_dataloaders=dataloader,
-            ckpt_path='./checkpoints/final.ckpt'
+            ckpt_path=None
             )
 
 trainer.save_checkpoint("./output/final.ckpt")
