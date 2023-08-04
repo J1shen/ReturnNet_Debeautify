@@ -4,3 +4,5 @@ open_clip_torch
 omegaconf
 xformers
 opencv-python
+tensorboard
+torch-tb-profiler
