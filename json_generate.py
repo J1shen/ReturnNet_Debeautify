@@ -22,7 +22,7 @@ def generate_prompt(img_pth):
     inputs = processor(images=image, text=None , return_tensors="pt").to(device, torch.float16)
     generated_ids = model.generate(**inputs)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
-    text = generated_text+"And ensure the person with real skin and figure."
+    text = generated_text+",real person, high resolution."
     return text
 
 # 指定文件夹路径

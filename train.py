@@ -46,7 +46,7 @@ trainer = pl.Trainer(
 # Train!
 trainer.fit(model=model, 
             train_dataloaders=dataloader,
-            ckpt_path=None
+            ckpt_path='output/final.ckpt'
             )
 
 trainer.save_checkpoint("./output/final.ckpt")
