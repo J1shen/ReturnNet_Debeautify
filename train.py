@@ -38,7 +38,7 @@ logger = ImageLogger(batch_frequency=logger_freq)
 trainer = pl.Trainer(
     #strategy='ddp_find_unused_parameters_true',
     precision=32, 
-    max_epochs=500,
+    max_epochs=300,
     callbacks=[logger]
     )
 
@@ -46,7 +46,7 @@ trainer = pl.Trainer(
 # Train!
 trainer.fit(model=model, 
             train_dataloaders=dataloader,
-            ckpt_path='output/final.ckpt'
+            ckpt_path='output/final2.ckpt'
             )
 
-trainer.save_checkpoint("./output/final.ckpt")
+trainer.save_checkpoint("./output/final3.ckpt")
