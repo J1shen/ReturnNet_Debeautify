@@ -11,7 +11,7 @@ from cldm.ddim_hacked import DDIMSampler
 save_memory = False
 
 # load checkpoint
-checkpoint = "output/final.ckpt"
+checkpoint = "output/final2.ckpt"
 model = create_model('./cldm_v21.yaml').cpu()
 model.load_state_dict(load_state_dict(checkpoint, location='cuda'))
 model = model.cuda()
@@ -73,4 +73,4 @@ if __name__ == '__main__':
                         eta=0.0)
     
     img_result = Image.fromarray(img_result[0])
-    img_result.save('test.jpg')
+    img_result.save('test2.jpg')
