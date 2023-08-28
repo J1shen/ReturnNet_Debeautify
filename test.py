@@ -73,4 +73,4 @@ if __name__ == '__main__':
                         eta=0.0)
     
     img_result = Image.fromarray(img_result[0])
-    img_result.save('test2.jpg')
+    img_result.save('test_result/human.jpg')
